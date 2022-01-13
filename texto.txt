@@ -1,0 +1,14 @@
+[
+    {
+        producto: "coca",
+        price: 23.55
+    },
+    {
+        producto: "sprite",
+        price: 12.55
+    },
+    {
+        producto: "melon",
+        price: 13.99
+    },
+]

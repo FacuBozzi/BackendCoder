@@ -2,74 +2,83 @@ const fs = require("fs")
 
 class Contenedor {
 
-    constructor(archivo, id){
-        this.archivo = archivo
-        this.id = id
+    rutaArchivo = "./texto.txt"
+
+    constructor(rutaArchivo){
+        this.rutaArchivo = rutaArchivo
     }
+    // constructor(archivo, id){
+    //     this.archivo = archivo
+    //     this.id = id
+    // }
 
 
-    save(archivo) {
-        fs.writeFile("./texto.txt", archivo, error => {
+    async save(objeto) {
+        const archivo = await JSON.parse(fs.promises.readFile(this.rutaArchivo));
+      
+        objeto["id"] = archivo.length + 1
+      
+        archivo.push(objeto);
+      
+        await fs.promises.writeFile('./text', JSON.stringify(archivo));
+    }
+      
+
+    async getById(id) {
+        const archivo = await fs.promises.readFile(this.rutaArchivo, (error, data) => {
             if (error) {
                 console.log(error)
             } else {
-                console.log("Archivo guardado exitosamente")
-                return this.id + 1
+                archivo.find(el => el.id === id) (
+                    console.log(data)
+                )
             }
         })
     }
 
-    getById(id) {
-        fs.readFile("./texto.txt", (error, data) => {
+    async getAll() {
+        const archivo = await fs.promises.readFile(this.rutaArchivo, (error, data) => {
             if (error) {
                 console.log(error)
             } else {
-                data == id 
-                id = this.id + 1
-                return data
-            }
-        })
-    }
-
-    getAll() {
-        fs.readFile("./texto.txt", (error, data) => {
-            if (error) {
-                console.log(error)
-            } else {
-                id = this.id + 1
                 return data
             }
         })  
     }
 
-    deleteById(id) {
-        fs.readFile("./texto.txt", (error, data) => {
-            if (error) {
-                console.log(error)
-            } else {
-                if (data == id) {
-                    return fs.unlink("./texto.txt", error => {
-                        if (error) {
-                            console.log(error)
-                        } else {
-                            id = this.id + 1
-                            console.log("Archivo eliminado exitosamente")
-                        }
-                    })
-                }
-            }
-        })
-    }
+ 
+    //ESTA FUNCION LA COMENTO PORQUE NO SE DE DONDE VIENE EL ERROR
+
+    // async deleteById(id) {
+    //     const archivo = await fs.promises.readFile(rutaArchivo, (error, data) => {
+    //         if (error) {
+    //             console.log(error)
+    //         }
+    //         else {
+    //             archivo.find(el => el.id === id) {
+    //                 await fs.promises.unlink(this.rutaArchivo, error => {
+    //                     console.log("hola")
+    //                 })
+    //             }
+    //         }
+    //     }
+    // }
+
 
     deleteAll() {
-        fs.unlink("./texto.txt", error => {
+        const archivo = await fs.promises.unlink("./texto.txt", error => {
             if (error) {
                 console.log(error)
             } else {
-                id = this.id + 1
-                console.log("Archivo eliminado exitosamente")
+                await fs.promises.unlink(this.rutaArchivo, error => {
+                    console.log(error)
+                })
             }
         })
     }
 
+
 }
+
+const miContenedor = new Contenedor("./texto.txt")
+miContenedor.save([])
