@@ -2,83 +2,85 @@ const fs = require("fs").promises
 
 class Contenedor {
 
-    rutaArchivo = "./texto.txt"
-
+    
     constructor(rutaArchivo, id){
         this.rutaArchivo = rutaArchivo
         this.id = id
     }
+
+    rutaArchivo = "./texto.txt"
+    id = 0
     // constructor(archivo, id){
     //     this.archivo = archivo
     //     this.id = id
     // }
 
 
-    async save(objeto) {
-        const archivo = await fs.promises.writeFile(this.rutaArchivo, objeto, "utf-8", error => {
-            try{
-
-            }
-        });
-            
+    async save(object) {
+        try {
+          const miObjeto = objeto
+          await fs.writeFile(rutaArchivo, miObjeto, "utf-8");
+          return this.id + 1
+        } catch (error) {
+          console.error(`Error intentando modificar el archivo: ${error.message}`);
+        }
+      }
       
-        await fs.promises.writeFile('./text', JSON.stringify(archivo));
-    }
-      
+      async agregarObjeto(object) {
+        try {
+          const miObjeto = object
+          await fs.writeFile(this.rutaArchivo, miObjeto, "utf-8",{ flag: 'a' });
+        } catch (error) {
+          console.error(`Error intentando modificar el archivo: ${error.message}`);
+        }
+      }
 
     async getById(id) {
-        const archivo = await fs.promises.readFile(this.rutaArchivo, (error, data) => {
-            if (error) {
-                console.log(error)
-            } else {
-                archivo.find(el => el.id === id) (
-                    console.log(data)
-                )
-            }
-        })
+        try {
+          const data = await fs.readFile(this.rutaArchivo,"utf-8");
+          if (data == id) {
+              return data
+          } else {
+              console.log("id no encontrado")
+          }
+        } catch (error) {
+          console.error(`Error intentando modificar el archivo: ${error.message}`);
+        }
+      }
+
+      
+      async getAll(rutaArchivo) {
+          try {
+              const data = await fs.readFile(rutaArchivo, "utf-8");
+              console.log(data.toString());
+        } catch (error) {
+          console.error(`Error intentando modificar el archivo: ${error.message}`);
+        }
     }
 
-    async getAll() {
-        const archivo = await fs.promises.readFile(this.rutaArchivo, (error, data) => {
-            if (error) {
-                console.log(error)
-            } else {
-                return data
-            }
-        })  
+    async deleteAll() {
+        try {
+            await fs.writeFile(this.rutaArchivo, " ", "utf-8");
+            console.log("todo borrado!")
+          } catch (error) {
+            console.error(`Error intentando modificar el archivo: ${error.message}`);
+          }
     }
 
- 
-    //ESTA FUNCION LA COMENTO PORQUE NO SE DE DONDE VIENE EL ERROR
-
-    // async deleteById(id) {
-    //     const archivo = await fs.promises.readFile(rutaArchivo, (error, data) => {
-    //         if (error) {
-    //             console.log(error)
-    //         }
-    //         else {
-    //             archivo.find(el => el.id === id) {
-    //                 await fs.promises.unlink(this.rutaArchivo, error => {
-    //                     console.log("hola")
-    //                 })
-    //             }
-    //         }
-    //     }
-    // }
-
-
-    deleteAll() {
-        const archivo = await fs.promises.unlink("./texto.txt", error => {
-            if (error) {
-                console.log(error)
+    async deleteById(id) {
+        try {
+            const data = await fs.readFile(this.rutaArchivo,"utf-8");
+            if (data.id == id) {
+                await fs.writeFile(this.rutaArchivo, " ", "utf-8");
+                console.log("contenido por id borrado!")
             } else {
-                await fs.promises.unlink(this.rutaArchivo, error => {
-                    console.log(error)
-                })
+                console.log("id no encontrado")
             }
-        })
+          } catch (error) {
+            console.error(`Error intentando modificar el archivo: ${error.message}`);
+          }
     }
-
+    
 
 }
 
