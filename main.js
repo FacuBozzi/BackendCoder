@@ -1,11 +1,12 @@
-const fs = require("fs")
+const fs = require("fs").promises
 
 class Contenedor {
 
     rutaArchivo = "./texto.txt"
 
-    constructor(rutaArchivo){
+    constructor(rutaArchivo, id){
         this.rutaArchivo = rutaArchivo
+        this.id = id
     }
     // constructor(archivo, id){
     //     this.archivo = archivo
@@ -14,11 +15,12 @@ class Contenedor {
 
 
     async save(objeto) {
-        const archivo = await JSON.parse(fs.promises.readFile(this.rutaArchivo));
-      
-        objeto["id"] = archivo.length + 1
-      
-        archivo.push(objeto);
+        const archivo = await fs.promises.writeFile(this.rutaArchivo, objeto, "utf-8", error => {
+            try{
+
+            }
+        });
+            
       
         await fs.promises.writeFile('./text', JSON.stringify(archivo));
     }
